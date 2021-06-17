@@ -1,0 +1,160 @@
+html,body{
+    height: 100%;
+}
+
+#nav-mobile{
+    background-image: url("../img/navback.jpg");
+    background-size: auto 100%;
+}
+
+.white-text li a{
+    color: white;
+}
+
+.white-text li a i{
+    color: white;
+}
+
+.sidenav li>a:hover{
+        background-color: rgba(255,255,255,0.1);
+}
+
+main{
+    padding-left: 300px;
+    min-height: 90%;
+}
+
+tbody {
+    display:block;
+    height:145px;
+    overflow:auto;
+}
+thead, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+thead {
+    width: calc( 100% - 1em )
+}
+table {
+    width:100%;
+}
+
+.background-color{
+    background-color: rgb(31, 31, 33);
+}
+
+.nav-color{
+    background-color: rgb(12, 12, 12);
+}
+
+.tab-color{
+    background-color: rgb(50, 50, 55) !important;
+}
+
+.card{
+    box-sizing: border-box;
+    border:solid 1px rgb(12, 12, 12);
+    border-radius: 8px;
+}
+.card-title{
+    background-color: rgb(25, 25, 27);
+    padding: 7px;
+    padding-left: 15px;
+}
+.card .card-content{
+    padding: 0px;
+    padding-bottom: 20px;
+}
+
+.card .divider{
+    margin-top:-10px;
+}
+
+#message-wraper{
+    height: 300px;
+    overflow-y:scroll;
+    padding: 20px;
+    margin: -5px 20px -5px 20px;
+}
+
+.info{
+    color: #3d5afe;
+
+}
+
+.error{
+    color: #ff1744;
+}
+
+.caution{
+    color: #ffc400;
+}
+
+.message{
+    font-family: Tahoma;
+    color: rgb(197, 197, 212);
+    padding: 5px;
+    padding-left: 20px;
+    margin-top: 2px;
+    width: 100%;
+    float: left;
+    border-bottom: solid 1px rgb(197, 197, 212);;
+
+}
+
+.log-message{
+    float:left;
+}
+.time{
+    float: left;
+}
+
+.printerLogo{
+    font-size: 200% !important;
+    width: 50px !important;
+    height: 50px !important;
+    line-height: 50px !important;
+}
+
+#printerlist > li > span{
+    margin-top:5px;
+}
+
+.collection-item{
+    padding-top: 15px !important;
+}
+
+.printer-list-icon{
+    padding-top:25px;
+    font-size:75px;
+}
+
+.printer-list-circle{
+    line-height: 75px;
+    width: 132px;
+    margin:25px 50px 25px 59px;
+}
+
+.printer-list-status{
+    font-size: 15px;
+    margin-bottom: 20px !important;
+}
+
+.printer-list-gear{
+    margin:8px;
+}
+
+.select-dropdown{
+    color: white !important;
+}
+
+#Terminal{
+    resize: none;
+    height: 525px;
+}
+
+#command{
+    width: 80%;
+}

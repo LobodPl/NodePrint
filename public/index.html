@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodePrint! Farm Control</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/custom.css" media="screen,projection" />
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/chart.min.js"></script>
+</head>
+
+<body class="background-color white-text">
+    <header>
+        <nav class="top-nav">
+            <div class="nav-wrapper nav-color white-text">
+                <a href="#!" class="brand-logo">NodePrint</a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a class="btn red waves-effect"><i class="material-icons left">report</i>EMERGENCY STOP</a></li>
+                </ul>
+                <a href="#" data-target="nav-mobile" class="top-nav sidenav-trigger full show-on-large">
+                    <i class="material-icons">menu</i>
+                </a>
+            </div>
+        </nav>
+        <ul id="nav-mobile" class="sidenav sidenav-fixed grey darken-4 white-text">
+            <li>
+                <div class="background center-align">
+                    <img src="img/logo.png">
+                </div>
+            </li>
+            <li class="white-text"><a id="DashboardButton" class="waves-effect" href="#!"><i
+                        class="material-icons white-text">dashboard</i>Dashboard</a></li>
+            <li><a id="PrinterListButton" class="waves-effect" href="#!"><i
+                        class="material-icons white-text">print</i>Printers</a></li>
+            <li>
+                <div class="divider"></div>
+            </li>
+            <li><a id="OptionsButton" class="waves-effect disabled" href="#!"><i
+                        class="material-icons white-text">settings</i>Options</a></li>
+        </ul>
+    </header>
+
+    <main class="background-color white-text">
+        <div id="Dashboard">
+            <div class="container">
+                <div class="row">
+                    <div class="col s4 m4">
+                        <div class="card tab-color">
+                            <div class="card-content white-text">
+                                <span class="card-title">Status chart</span>
+                                <div class="divider"></div>
+                                <br>
+                                <canvas id="ActiveChart" width="400px" height="200px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s8 m8">
+                        <div class="card tab-color">
+                            <div class="card-content white-text">
+                                <span class="card-title">Files</span>
+                                <div class="divider"></div>
+                                <table id="files" class="bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="center">Name</th>
+                                            <th width="11.5%">Print</th>
+                                            <th width="10.5%">Delete</th>
+                                            <th width="12%">Download</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="filelist">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m12">
+                        <div class="card tab-color">
+                            <div class="card-content white-text">
+                                <span class="card-title">Recent Events</span>
+                                <div class="divider"></div>
+                                <br>
+                                <div id="message-wraper">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="PrinterList" class="hide">
+            <div class="container">
+                <div class="row" id="printerwraper">
+                </div>
+            </div>
+        </div>
+
+        <div id="PrinterSelectmodal" class="modal tab-color" tabindex="0">
+            <div class="modal-content">
+                <h3 class="header">Select printer</h3>
+                <ul id="printerlist" class="collection">
+                </ul>
+            </div>
+        </div>
+
+        <div id="PrinterSettings" class="modal modal-fixed-footer tab-color" tabindex="0">
+            <div class="modal-content">
+                <input id="printerid" hidden type="text" disabled value=""></input>
+                <h4><span id="printername">Printer</span> settings</h4>
+                <p>Printer name: <input class="white-text" type="text" id="printernameinput"></p>
+                <div>Com port: <select class="tab-color white-text browser-default" name="" id="comport"></select></div>
+            </div>
+            <div class="modal-footer tab-color">
+                <a href="#!" id="SaveSettings" class="modal-close waves-effect waves-green white-text btn-flat">Save</a>
+                <a href="#!" class="modal-close waves-effect waves-green white-text btn-flat">Discard</a>
+            </div>
+        </div>
+
+        <div id="PrinterTerminal" class="modal modal-fixed-footer tab-color" tabindex="0">
+            <div class="modal-content">
+                <input class="printerid" hidden type="text" disabled value=""></input>
+                <h4>Realtime Terminal</h4>
+                <textarea id="Terminal" cols="30" rows="90" class="white-text" readonly></textarea>
+            </div>
+            <div class="modal-footer tab-color">
+                <input type="text" class = "white-text" placeholder="Type command here..." id="command"/>
+                <a href="#!" id="SendGcode" class="waves-effect waves-green white-text btn-flat"><i class="material-icons left">send</i> Send</a>
+                <a href="#!" class="modal-close waves-effect waves-green white-text btn-flat">Close</a>
+            </div>
+        </div>
+    </main>
+
+
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/chart-custom.js"></script>
+    <script type="text/javascript" src="js/socket-custom.js"></script>
+    <script type="text/javascript" src="js/materialize-custom.js"></script>
+</body>
+
+</html>
