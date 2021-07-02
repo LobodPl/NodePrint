@@ -189,6 +189,9 @@ class PrinterWorker {
 				}
 				PrinterWorker.socket.emit("printerlog", "[Data] >> " + data);
 				console.log('[Data] >>', data);
+				if(data.includes("Error:")){
+					this.setState("Error");
+				}
 			});
 		} else {
 			if (typeof (SingleCommand) == "undefined") {

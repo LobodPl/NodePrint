@@ -18,7 +18,7 @@ class DatabaseWorker{
         const row = this.db.prepare('UPDATE Nodes SET Name = ? WHERE Id = ?').run(newname, printerId);
     }
     storeSecretWithId(printerId,secretKey){
-        const row = this.db.prepare('INSERT INTO Nodes VALUES (?,?)').run(printerId,secretKey);
+        const row = this.db.prepare('INSERT INTO Nodes VALUES (?,?,null)').run(printerId,secretKey);
     }
 
 }

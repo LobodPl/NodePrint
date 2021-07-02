@@ -52,7 +52,6 @@ webio.on("connection", function (socket) {
 	});
 	socket.on("sendFile", function (data) {
 		const printer = connectedPrinters.find(x => x.id = data[0]);
-		console.log(printer);
 		sendFile("gcode/" + data[1], printer.messageTemplate, printer.socket);
 	});
 

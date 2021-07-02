@@ -49,7 +49,6 @@ socket.on("getPrinterList", function (printers) {
                 </a>
             </li>`
         }
-        modalDrawdone = true;
     }
     if ($("#printerlist")[0].innerHTML == "") {
         $("#printerlist")[0].innerHTML = '<p class="center">Sorry, no connected printers</p>';
@@ -66,6 +65,7 @@ socket.on("getPrinterList", function (printers) {
             openPrinterTerminalModal(e.currentTarget.parentNode.firstChild.value)
         })
     }
+    if(!modalDrawdone) modalDrawdone = true;
 })
 socket.on("log-message", function (message) {
     let d = new Date(message.date)
