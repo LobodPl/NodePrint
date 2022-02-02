@@ -1,0 +1,218 @@
+{"0": {
+    "doc": "Jak zacząć",
+    "title": "Instalacja NodeJS",
+    "content": "W pierwszej kolejności należy zainstalować node dla odpowiedniego systemu operacyjnego: . | x64: . | Windows: Node 14.18.1 dla systemu Windows | Linux: Node 14.18.1 dla systemu Linux | OSX: Node 14.18.1 dla systemu OSX | . | ARM: . | Armv7: Node 14.18.1 dla systemu Linux | Armv8: Node 14.18.1 dla systemu Linux | . | . ",
+    "url": "http://localhost:4000/docs/QuickStart.html#instalacja-nodejs",
+    "relUrl": "/QuickStart.html#instalacja-nodejs"
+  },"1": {
+    "doc": "Jak zacząć",
+    "title": "Kopiowanie repozytorium",
+    "content": "Teraz należy skopiować kod źródłowy programu z repozytorium NodePrint w serwisie GitHub. Można to zrobić na 2 sposoby: . | Przez zastosowanie linii poleceń: git clone https://github.com/LobodPl/NodePrint | Przez interfejs na stronie GitHub: Tak pobrane archiwum należy wypakować. | . ",
+    "url": "http://localhost:4000/docs/QuickStart.html#kopiowanie-repozytorium",
+    "relUrl": "/QuickStart.html#kopiowanie-repozytorium"
+  },"2": {
+    "doc": "Jak zacząć",
+    "title": "Instalacja komponentów",
+    "content": ". | Następnie należy przejść do katalogu w którym znajduje się rozpakowany kod z repozytorium. | Uruchamić odpowiedni dla naszej platformy terminal. | Wykonać polecenie npm install Poprzedni krok Następny krok | . ",
+    "url": "http://localhost:4000/docs/QuickStart.html#instalacja-komponent%C3%B3w",
+    "relUrl": "/QuickStart.html#instalacja-komponentów"
+  },"3": {
+    "doc": "Jak zacząć",
+    "title": "Jak zacząć",
+    "content": " ",
+    "url": "http://localhost:4000/docs/QuickStart.html",
+    "relUrl": "/QuickStart.html"
+  },"4": {
+    "doc": "Informacje",
+    "title": "Informacje",
+    "content": "Niniejsza strona jest dokumentacją w języku polskim stworzoną dla projektu NodePrint w ramach projektu inżynierskiego. Strona została wygenerowana przy pomocy oprogramowania Jekyll napisanego w języku Ruby a za jej wygląd odpowiada szablon just-the-docs . ",
+    "url": "http://localhost:4000/docs/about/",
+    "relUrl": "/about/"
+  },"5": {
+    "doc": "Architektura aplikacji",
+    "title": "Architektura sieciowa",
+    "content": ". ",
+    "url": "http://localhost:4000/docs/architecture.html#architektura-sieciowa",
+    "relUrl": "/architecture.html#architektura-sieciowa"
+  },"6": {
+    "doc": "Architektura aplikacji",
+    "title": "Architektura wewnętrzna aplikacji",
+    "content": ". ",
+    "url": "http://localhost:4000/docs/architecture.html#architektura-wewn%C4%99trzna-aplikacji",
+    "relUrl": "/architecture.html#architektura-wewnętrzna-aplikacji"
+  },"7": {
+    "doc": "Architektura aplikacji",
+    "title": "Architektura aplikacji",
+    "content": " ",
+    "url": "http://localhost:4000/docs/architecture.html",
+    "relUrl": "/architecture.html"
+  },"8": {
+    "doc": "Kopia zapasowa i sytuacje wyjątkowe",
+    "title": "Kopia zapasowa",
+    "content": "Zalecane jest cykliczne wykonywanie kopi bezpieczeństwa bazy danych (folder “db”) oraz folderu “gcode”. Jeżeli przechowywane pliki gcode nie wykazują wartości zaleca się backup bazy danych ponieważ przechowywanych tam kluczy nie da się w żaden sposób odzyskać. ",
+    "url": "http://localhost:4000/docs/backups.html#kopia-zapasowa",
+    "relUrl": "/backups.html#kopia-zapasowa"
+  },"9": {
+    "doc": "Kopia zapasowa i sytuacje wyjątkowe",
+    "title": "Zachowanie systemu w przypadku wystąpienia błędu",
+    "content": "Z względu na architekturę systemu, aplikacja kliencka po otrzymaniu zadania druku ma autonomie w wykonywaniu poleceń i nie wymaga nadzoru serwera głównego. Jeżeli jednak w casie wykonywania polecenia wystapi błąd zatrzymaniu ulegnie jedynie aplikacja kliencka a odpowiedni komunikat pojawi się z konsoli serwerowej. ",
+    "url": "http://localhost:4000/docs/backups.html#zachowanie-systemu-w-przypadku-wyst%C4%85pienia-b%C5%82%C4%99du",
+    "relUrl": "/backups.html#zachowanie-systemu-w-przypadku-wystąpienia-błędu"
+  },"10": {
+    "doc": "Kopia zapasowa i sytuacje wyjątkowe",
+    "title": "Przywracanie",
+    "content": "Przywrócenie oprogramowania z kopii polega na ponownym skopiowaniu folderów “gcode” i “db” do katalogu głównego aplikacji serwerowej. Przy ponownym uruchomieniu aplikacja wczyta poprzednie ustawienia. ",
+    "url": "http://localhost:4000/docs/backups.html#przywracanie",
+    "relUrl": "/backups.html#przywracanie"
+  },"11": {
+    "doc": "Kopia zapasowa i sytuacje wyjątkowe",
+    "title": "Kopia zapasowa i sytuacje wyjątkowe",
+    "content": " ",
+    "url": "http://localhost:4000/docs/backups.html",
+    "relUrl": "/backups.html"
+  },"12": {
+    "doc": "Konfiguracja aplikacji klienckiej",
+    "title": "Przygotowanie aplikacji klienckiej",
+    "content": "Ten fragment aplikacji odpowiada za przeprowadzanie poprawnej komunikacji pomiędzy aplikacją serwerową a urządzeniem CNC. W folderze mirror znajduje się plik mirrorservice.js. Ten plik należy przekopiować ten plik do innego folderu. Następnie przejść do folderu z skopiowanym plikiem oraz go uruchomić przy pomocy polecenia node mirrorservice.js. Uruchomienie powinno skutkować wyświetleniem informacji o brakach w bazowej konfiguracji..\\NodePrint\\mirror&gt;node mirrorservice.js Fill missing fields in config.cfg . Jednocześnie został wygenerowany plik config.json w którym znajduje się właściwa konfiguracja dla danego urządzenia krańcowego. ",
+    "url": "http://localhost:4000/docs/client-config.html#przygotowanie-aplikacji-klienckiej",
+    "relUrl": "/client-config.html#przygotowanie-aplikacji-klienckiej"
+  },"13": {
+    "doc": "Konfiguracja aplikacji klienckiej",
+    "title": "Konfiguracja adresu serwera",
+    "content": "W pliku config.json znajduje się następującą treść: . {\"nodeId\":\"fcac8b37-e87f-4cc3-9808-9e1b99d1cd2b\",\"apiKey\":null,\"comPort\":null,\"nodeAddress\":\"ws://localhost:3000\"} . Oznaczenia pól: . | nodeId: wygenerowany losowy identyfikator urządzenia (po przeprowadzeniu parowania z aplikacją serwerową nie zmieniać) | apiKey: wygenerowany klucz służący do podpisania komunikacji (nigdy nie zmieniać) | comPort: adres portu fizycznego urządzenia do komunikacji z maszyną CNC | nodeAddress: adres serwera kontrolującego | . Teraz należy zmienić pole nodeAddress na adres aplikacji serwerowej. Adres ten możemy sprawdzić wpisując odpowiednie polecenia w terminal systemowy: . | Dla systemu Windows: | Dla systemu Linux: | Dla systemu OSX: | . Przykład: . Jeżeli widoczny jest adres: 192.168.0.150 Plik konfiguracyjny powinien wyglądać tak: . {\"nodeId\":\"fcac8b37-e87f-4cc3-9808-9e1b99d1cd2b\",\"apiKey\":null,\"comPort\":null,\"nodeAddress\":\"ws://192.168.0.150:3000\"} . Tak przygotowana aplikacja jest gotowa do parowania z serwerem. Kroki należy powtórzyć dla każdej dodatkowej maszyny CNC . Poprzedni krok Następny krok . ",
+    "url": "http://localhost:4000/docs/client-config.html#konfiguracja-adresu-serwera",
+    "relUrl": "/client-config.html#konfiguracja-adresu-serwera"
+  },"14": {
+    "doc": "Konfiguracja aplikacji klienckiej",
+    "title": "Konfiguracja aplikacji klienckiej",
+    "content": " ",
+    "url": "http://localhost:4000/docs/client-config.html",
+    "relUrl": "/client-config.html"
+  },"15": {
+    "doc": "Objaśnienie konfiguracji klienckiej",
+    "title": "Objaśnienie konfiguracji klienckiej",
+    "content": "{ \"nodeId\":\"\", // Wygenerowana wartość identyfikacyjna (używana do identyfikacji w bazie danych). \"apiKey\":\"\", // Funkcja skrótu bcrypt od wygenerowanej wartości klucza. \"comPort\":\"\", // Andres portu na którym aplikacja komunikuje się z urządzeniem końcowym \"nodeAddress\":\"ws://localhost:3000\" //Adres serwera głównego } . ",
+    "url": "http://localhost:4000/docs/clientconfig.html",
+    "relUrl": "/clientconfig.html"
+  },"16": {
+    "doc": "Architektura bazy danych",
+    "title": "Architektura bazy danych",
+    "content": "Baza danych została ograniczona do absolutnego minimum. | Id - unikalny identyfikator w formacie UUID. | SecretKey - klucz wykorzystywany do komunikacji w formacie UUID. | Name - nazwa wyświetlana w aplikacji. | . ",
+    "url": "http://localhost:4000/docs/database.html",
+    "relUrl": "/database.html"
+  },"17": {
+    "doc": "Wymagania sprzętowe",
+    "title": "Wymagania sprzętowe",
+    "content": " ",
+    "url": "http://localhost:4000/docs/hardware-requirements.html",
+    "relUrl": "/hardware-requirements.html"
+  },"18": {
+    "doc": "Wymagania sprzętowe",
+    "title": "Wymagania aplikacji serwerowej",
+    "content": ". | Aplikacja wymaga min. 32-bitowego procesora.(x86_64,ARMv7 itp.) | Szacowana minimalna ilość pamięci ram wynosi 200MB+50MB/obsługiwana maszyna. | Połączenie przewodowe lub bezprzewodowe | Zainstalowany system Windows(testowane systemy 7,10,11)/Linux(rekomendowany 20.04 LTS) | . ",
+    "url": "http://localhost:4000/docs/hardware-requirements.html#wymagania-aplikacji-serwerowej",
+    "relUrl": "/hardware-requirements.html#wymagania-aplikacji-serwerowej"
+  },"19": {
+    "doc": "Wymagania sprzętowe",
+    "title": "Wymagania aplikacji klienckiej",
+    "content": ". | Aplikacja wymaga min. 32-bitowego procesora.(x86_64,ARMv7 itp.) | Szacowana minimalna ilość pamięci ram wynosi 20MB+20MB/obsługiwana maszyna. | Połączenie przewodowe lub bezprzewodowe | Zainstalowany system Windows(testowane systemy 7,10,11)/Linux(rekomendowany 20.04 LTS) | Kontroler USB 2.0/3.0 (można stosować huby USB) | . ",
+    "url": "http://localhost:4000/docs/hardware-requirements.html#wymagania-aplikacji-klienckiej",
+    "relUrl": "/hardware-requirements.html#wymagania-aplikacji-klienckiej"
+  },"20": {
+    "doc": "Budowanie z źródła",
+    "title": "Budowanie z źródła",
+    "content": " ",
+    "url": "http://localhost:4000/docs/how-to-build.html",
+    "relUrl": "/how-to-build.html"
+  },"21": {
+    "doc": "Budowanie z źródła",
+    "title": "Wymagania wstępne",
+    "content": ". | windows-build-tools npm install --global windows-build-tools | Microsoft Visual Studio 2017/2019 | . ",
+    "url": "http://localhost:4000/docs/how-to-build.html#wymagania-wst%C4%99pne",
+    "relUrl": "/how-to-build.html#wymagania-wstępne"
+  },"22": {
+    "doc": "Budowanie z źródła",
+    "title": "Budowanie",
+    "content": ". | npm update | npm start | . ",
+    "url": "http://localhost:4000/docs/how-to-build.html#budowanie",
+    "relUrl": "/how-to-build.html#budowanie"
+  },"23": {
+    "doc": "Budowanie z źródła",
+    "title": "Zależności",
+    "content": "\"bcrypt\": \"^5.0.1\", \"better-sqlite3\": \"^7.1.5\", \"compression\": \"^1.7.4\", \"express\": \"^4.17.1\", \"express-minify\": \"^1.0.0\", \"n-readlines\": \"^1.0.1\", \"prompt\": \"^1.1.0\", \"serialport\": \"^9.0.6\", \"socket.io\": \"^4.0.1\", \"socket.io-client\": \"^4.0.1\", \"socket.io-stream\": \"^0.9.1\", \"uuid\": \"^8.3.2\" . ",
+    "url": "http://localhost:4000/docs/how-to-build.html#zale%C5%BCno%C5%9Bci",
+    "relUrl": "/how-to-build.html#zależności"
+  },"24": {
+    "doc": "Budowanie z źródła",
+    "title": "Migracja do nowej wersji NodeJS",
+    "content": "Jeżeli wymagana jest migracja na nową wersje NodeJS należy wykonać komendę która przebuduje wszystkie zależności: . npm rebuild . ",
+    "url": "http://localhost:4000/docs/how-to-build.html#migracja-do-nowej-wersji-nodejs",
+    "relUrl": "/how-to-build.html#migracja-do-nowej-wersji-nodejs"
+  },"25": {
+    "doc": "Zarządzanie drukarkami",
+    "title": "Zmiana nazwy drukarki",
+    "content": "Po sparowaniu drukarka nie posiada przypisanej nazwy. [11:15:42][Info] Printer \"null\" has connected Aby ułatwić zarządzanie drukarkami w przyszłości, można im nadać nazwę: . | Wchodzimy w sekcję Drukarki | Wybieramy ikonę zębatki przy drukarce której nazwę chcemy zmienić | W polu Nazwa drukarki możemy podać nową nazwę | . ",
+    "url": "http://localhost:4000/docs/printer-managment.html#zmiana-nazwy-drukarki",
+    "relUrl": "/printer-managment.html#zmiana-nazwy-drukarki"
+  },"26": {
+    "doc": "Zarządzanie drukarkami",
+    "title": "Zmiana portu drukarki",
+    "content": "Po sparowaniu drukarka nie posiada przypisanego portu COM. Przed pierwszym drukiem należy ustawić odpowiedni port. | Wchodzimy w sekcję Drukarki | Wybieramy ikonę zębatki przy drukarce którą edytujemy | W polu Com port ustawiamy odpowiedni port. | . ",
+    "url": "http://localhost:4000/docs/printer-managment.html#zmiana-portu-drukarki",
+    "relUrl": "/printer-managment.html#zmiana-portu-drukarki"
+  },"27": {
+    "doc": "Zarządzanie drukarkami",
+    "title": "Podgląd terminala drukarki",
+    "content": "W każdym momencie mamy podgląd terminala wyjściowego drukarki. Aby go wyświetlić należy: . | Wejść w sekcję Drukarki | Wybrac ikonę terminala przy drukarce, której terminal chcemy wyświetlić | . Poprzedni krok Następny krok . ",
+    "url": "http://localhost:4000/docs/printer-managment.html#podgl%C4%85d-terminala-drukarki",
+    "relUrl": "/printer-managment.html#podgląd-terminala-drukarki"
+  },"28": {
+    "doc": "Zarządzanie drukarkami",
+    "title": "Zarządzanie drukarkami",
+    "content": " ",
+    "url": "http://localhost:4000/docs/printer-managment.html",
+    "relUrl": "/printer-managment.html"
+  },"29": {
+    "doc": "Druk!",
+    "title": "Wysłanie pliku do drukarki",
+    "content": "W celu przesłania pliku do drukarki wybieramy go z listy dostępnych plików . Przy wybrany pliku naciskamy przycisk druku. następne wybieramy dostępną drukarkę z listy: . Poprzedni krok Następny krok . ",
+    "url": "http://localhost:4000/docs/printing.html#wys%C5%82anie-pliku-do-drukarki",
+    "relUrl": "/printing.html#wysłanie-pliku-do-drukarki"
+  },"30": {
+    "doc": "Druk!",
+    "title": "Druk!",
+    "content": " ",
+    "url": "http://localhost:4000/docs/printing.html",
+    "relUrl": "/printing.html"
+  },"31": {
+    "doc": "Uruchomienie serwera",
+    "title": "Pierwsze uruchomienie serwera",
+    "content": "Serwer jest już gotowy do uruchomienia. Aby to zrobić, należy wywołać polecenie . npm start . Po jego wykonaniu powinien pojawić się tekst mówiący na jakim porcie działa aplikacja serwera. Domyślnie jest to port 3000 . NodePrint&gt;npm start Main app is listening on port 3000 http://localhost:3000 . Nastepnie należy otworzyć podany adres w przeglądarce internetowej . ",
+    "url": "http://localhost:4000/docs/server-startup.html#pierwsze-uruchomienie-serwera",
+    "relUrl": "/server-startup.html#pierwsze-uruchomienie-serwera"
+  },"32": {
+    "doc": "Uruchomienie serwera",
+    "title": "Parowanie aplikacji klienckich",
+    "content": "W celu przeprowadzenia parowania aplikacji klienckich należy przełączyć serwer w przeznaczony do tego tryb . Teraz wystarczy tylko uruchomić aplikacje klienckie. Każdy uruchomiony program kliencki powinien zwrócić informację o pomyślnym połączeniu: . &gt;node mirrorservice.js [SEC] &gt;&gt; Server auth succ. A dane w informacji o eventach jak i statusie powinny zostać zaktualizowane: . Poprzedni krok Następny krok . ",
+    "url": "http://localhost:4000/docs/server-startup.html#parowanie-aplikacji-klienckich",
+    "relUrl": "/server-startup.html#parowanie-aplikacji-klienckich"
+  },"33": {
+    "doc": "Uruchomienie serwera",
+    "title": "Uruchomienie serwera",
+    "content": " ",
+    "url": "http://localhost:4000/docs/server-startup.html",
+    "relUrl": "/server-startup.html"
+  },"34": {
+    "doc": "Dokumentacja techniczna",
+    "title": "Dokumentacja techniczna",
+    "content": " ",
+    "url": "http://localhost:4000/docs/technical-documentation.html",
+    "relUrl": "/technical-documentation.html"
+  },"35": {
+    "doc": "Instrukcja dla użytkownika",
+    "title": "Instrukcja dla użytkownika",
+    "content": " ",
+    "url": "http://localhost:4000/docs/user-guide.html",
+    "relUrl": "/user-guide.html"
+  }
+}
