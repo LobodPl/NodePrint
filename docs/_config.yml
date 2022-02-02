@@ -30,7 +30,7 @@ twitter_username: LobodPL
 github_username:  LobodPL
 
 # Build settings
-theme: 'just-the-docs'
+remote_theme: pmarsceill/just-the-docs
 
 search_enabled: true
 search.heading_level: 3
