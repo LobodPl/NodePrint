@@ -2,7 +2,7 @@
   "name": "nodeprint",
   "version": "1.0.0",
   "description": "Appication for remote controll of CNC farm",
-  "main": "mirrorservice.js",
+  "main": "main.js",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "better-sqlite3": "^7.1.5",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damian Łoboda",

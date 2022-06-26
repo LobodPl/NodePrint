@@ -2,7 +2,6 @@ var socket = io("/web");
 socket.on("connect", () => {
     socket.emit("getFileList");
     socket.emit("getPrintersStatus");
-    socket.emit("getMessages");
 })
 socket.on("getPrintersStatus", (status) => {
     StatusChart.data.datasets[0].data = [status.Printing, status.Downloading, status.Idle, status.Error]
@@ -24,30 +23,9 @@ socket.on("getPrinterList", function (printers) {
     if (!modalDrawdone) $("#printerlist")[0].innerHTML = "";
     $("#printerwraper")[0].innerHTML = "";
     for (printer of printers) {
-        $("#printerwraper")[0].innerHTML += `<div class="col s3 m3">
-            <div class="card tab-color">
-                <div class="card-content white-text">
-                    <span class="card-title">${printer.name == null ? "Printer" : printer.name}</span>
-                    <div class="divider"></div>
-                    <div class="right printer-list-gear"><input hidden type="text" disabled value="${printer.id}"></input><a href="#"class="printerSettings white-text"><i 
-                        class="material-icons">settings</i></a><br><a href="#" class="printerTerminal white-text"><i class="material-icons">article</i></a></div>
-                    <div class="circle center ${printer.status == "Idle" ? "green" : "red"} printer-list-circle"><i
-                            class="material-icons printer-list-icon">print</i></div>
-                    
-                    <div class= "center"><p class = "printer-list-status">Status: <span>${printer.status}</span></p><div class="btn red waves-effect"><i class="material-icons left">report</i>EMERGENCY STOP</div></div>
-                </div>
-            </div>
-        </div>`
+        $("#printerwraper")[0].innerHTML += `<div class="col s3 m3"><div class="card tab-color"><div class="card-content white-text"><span class="card-title">${printer.name == null ? "Printer" : printer.name}</span><div class="divider"></div><div class="right printer-list-gear"><input hidden type="text" disabled value="${printer.id}"></input><a href="#"class="printerSettings white-text"><i class="material-icons">settings</i></a><br><a href="#" class="printerTerminal white-text"><i class="material-icons">article</i></a></div><div class="circle center ${printer.status == "Idle" ? "green" : "red"} printer-list-circle"><i class="material-icons printer-list-icon">print</i></div><div class= "center"><p class = "printer-list-status">Status: <span>${printer.status}</span></p><div class="btn red waves-effect"><i class="material-icons left">report</i>EMERGENCY STOP</div></div></div></div></div>`
         if (!modalDrawdone) {
-            $("#printerlist")[0].innerHTML += `<li class="collection-item avatar tab-color">
-                <input hidden type="text" disabled value="${printer.id}"></input>
-                <i class="material-icons circle printerLogo ${printer.status == "Idle" ? "green" : "red"}">print</i>
-                <span class="title">${printer.name == null ? "Printer" : printer.name}</span>
-                <p>Status: ${printer.status}</p>
-                <a href="#!" id="last" class="secondary-content btn confirmPrint waves-effect waves-light gray ${printer.status == "Idle" ? "" : "disabled"}">
-                    <i class="material-icons">print</i>
-                </a>
-            </li>`
+            $("#printerlist")[0].innerHTML += `<li class="collection-item avatar tab-color"><input hidden type="text" disabled value="${printer.id}"></input><i class="material-icons circle printerLogo ${printer.status == "Idle" ? "green" : "red"}">print</i><span class="title">${printer.name == null ? "Printer" : printer.name}</span><p>Status: ${printer.status}</p><a href="#!" id="last" class="secondary-content btn confirmPrint waves-effect waves-light gray ${printer.status == "Idle" ? "" : "disabled"}"><i class="material-icons">print</i></a></li>`
         }
     }
     if ($("#printerlist")[0].innerHTML == "") {

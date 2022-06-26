@@ -53,13 +53,12 @@ function openPrinterSettingsModal(id) {
         $("#printernameinput")[0].value = (response.name != null ? response.name : "Printer");
         $("#printername")[0].innerText = (response.name != null ? response.name : "");
 
-        $("#comport")[0].innerHTML = `<option value="NoChange">No Change</option>`;
-        const ports = JSON.parse(response.ports)
-        for (port of ports) {
+        $("#comport")[0].innerHTML = `<option value="NoChange">${response.ports.selected}</option>`;
+        for (const port of response.ports.ports) {
             $("#comport")[0].innerHTML += `<option value="${port.path}">${port.path} - ${port.manufacturer}</option>`
         }
     })
-    socket.emit("getPortList", id);
+    socket.emit("getPortList", {"id":id});
 }
 
 function openPrinterTerminalModal(id) {
@@ -73,14 +72,14 @@ function openPrinterTerminalModal(id) {
 
 function modalPrintFile(id) {
     if (selectedFile != null) {
-        socket.emit("sendFile", [id, selectedFile]);
+        socket.emit("sendFile", {id:id, file:selectedFile});
         selectedFile = null;
     }
     selectModal.close();
 }
 
 function deletefile(name) {
-    socket.emit("deleteFile", name);
+    socket.emit("deleteFile", {"name":name});
 
 }
 $(document).ready(function () {

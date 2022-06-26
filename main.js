@@ -4,6 +4,7 @@ const socketStream = require('socket.io-stream');
 const db = require("./modules/databaseworker")
 const Printer = require("./modules/printer")
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt');
 const fs = require('fs');
 var minify = require('express-minify');
 var compression = require('compression')
@@ -25,17 +26,17 @@ const server = app.listen(PORT, function () {
 // Static files
 app.use('/gcode', express.static("gcode"));
 app.use(compression());
-//app.use(minify());
+app.use(minify());
 app.use(express.static("public"));
 
 // Socket setup
 const ioserver = socket(server);
-const io = ioserver.of("/mirror");
+const printerIo = ioserver.of("/mirror");
 const webio = ioserver.of("/web");
 
 webio.on("connection", function (socket) {
 	socket.on("getPrintersStatus", function () {
-		status = getPrintersStatus();
+		const status = getPrintersStatus();
 		socket.emit("getPrintersStatus", status);
 	})
 	socket.on("getFileList", function () {
@@ -45,39 +46,38 @@ webio.on("connection", function (socket) {
 	})
 	socket.on("getPrinterList", function () {
 		let printerList = [];
-		for (printer of connectedPrinters) {
+		for (const printer of connectedPrinters) {
 			printerList.push({ "name": printer.name, "status": printer.state, "id": printer.id });
 		}
 		socket.emit("getPrinterList", printerList);
 	});
 	socket.on("sendFile", function (data) {
-		const printer = connectedPrinters.find(x => x.id = data[0]);
-		sendFile("gcode/" + data[1], printer.messageTemplate, printer.socket);
+		const printer = connectedPrinters.find(x => x.id == data.id);
+		sendFile("gcode/" + data.file, printer.messageTemplate, printer.socket);
 	});
 
-	socket.on("deleteFile", function (name) {
-		fs.unlinkSync("gcode/" + name);
+	socket.on("deleteFile", function (data) {
+		fs.unlinkSync("gcode/" + data.name);
 		fs.readdir("gcode", function (err, filesList) {
 			socket.emit("getFileList", filesList);
 		});
 	});
-	socket.on("getPortList", function (printerid) {
-		console.log(printerid);
-		const printer = connectedPrinters.find(x => x.id == printerid);
+	socket.on("getPortList", function (data) {
+		console.log(data.id);
+		const printer = connectedPrinters.find(x => x.id == data.id);
 		printer.socket.once("ports", function (list) {
 			socket.emit("getPortList", { "name": printer.name, "ports": list });
 		});
 		printer.socket.emit("getPortList", printer.messageTemplate);
 	});
-	socket.on("getMessages", function () {
-		for (message of messages) {
-			socket.emit("log-message", message);
-		}
-	});
-	socket.on("setPrinterName", function (msg) {
-		const printer = connectedPrinters.find(x => x.id == msg.id);
-		db.setPrinterNameById(msg.newname, msg.id);
-		printer.name = msg.newname;
+
+	for (const message of messages) {
+		socket.emit("log-message", message);
+	}
+	socket.on("setPrinterName", function (data) {
+		const printer = connectedPrinters.find(x => x.id == data.id);
+		db.setPrinterNameById(data.newname, data.id);
+		printer.name = data.newname;
 	});
 	socket.on("setPrinterPort", function (msg) {
 		const printer = connectedPrinters.find(x => x.id == msg.id);
@@ -86,33 +86,33 @@ webio.on("connection", function (socket) {
 		printer.socket.emit("setComPort", message);
 	});
 	socket.on("killAll", function () {
-		for (printer of connectedPrinters) {
+		for (const printer of connectedPrinters) {
 			let msg = printer.messageTemplate;
 			printer.socket.emit("kill", msg);
 		}
 	});
-	socket.on("kill", function (msg) {
-		const printer = connectedPrinters.find(x => x.id == msg.id);
+	socket.on("kill", function (data) {
+		const printer = connectedPrinters.find(x => x.id == data.id);
 		let message = printer.messageTemplate;
 		printer.socket.emit("kill", message);
 	});
-	socket.on("command", function (msg) {
-		const printer = connectedPrinters.find(x => x.id == msg.id);
-		let message = printer.messageTemplate;
-		message.command = msg.command;
-		printer.socket.emit("command", message);
+	socket.on("command", function (data) {
+		const printer = connectedPrinters.find(x => x.id == data.id);
+		let msg = printer.messageTemplate;
+		msg.command = data.command;
+		printer.socket.emit("command", msg);
 	});
 });
 
-io.on("connection", function (socket) {
+printerIo.on("connection", function (socket) {
 	console.log("Mirror node is connected");
-	let ThisnodeId = 0;
+	let thisNodeId = 0;
 	socket.on("log", function (msg) {
 		const message = { "class": "info", "tag": "Info", "text": msg };
 		sendLog(message);
 	});
 	socket.on("printerlog", function (msg) {
-		let message = { "id": ThisnodeId, "message": msg };
+		let message = { "id": thisNodeId, "message": msg };
 		webio.emit("printerlog", message);
 	});
 	socket.on("nodeId", (nodeId) => {
@@ -120,7 +120,7 @@ io.on("connection", function (socket) {
 		if (secret != 0) {
 			socket.emit("apiKey", secret);
 			let printer = new Printer();
-			ThisnodeId = nodeId;
+			thisNodeId = nodeId;
 			printer.id = nodeId;
 			printer.name = db.getPrinterNameById(nodeId);
 			printer.secret = secret;
@@ -128,27 +128,36 @@ io.on("connection", function (socket) {
 			printer.state = "Idle";
 			printer.socket = socket;
 			connectedPrinters.pushIfNotExist(printer, (e) => { return e.id == printer.id });
-			const message = { "class": "info", "tag": "Info", "text": `Printer "${printer.name}" has connected` }
-			sendLog(message)
-
+			const message = { "class": "info", "tag": "Info", "text": `Printer "${printer.name}" has connected` };
+			sendLog(message);
 		}
 		else {
 			socket.emit("pairRequest");
 			socket.once("pairResponse", (responsedata) => {
-				db.storeSecretWithId(responsedata.id, responsedata.secret);
+				const token = uuidv4();
+				const apiKey = bcrypt.hashSync(token, 10);
+				socket.emit("pairResponse",{"encryptedKey":apiKey})
+				db.storeSecretWithId(responsedata.id, token);
 			})
 		}
 	})
 	socket.on("stateChange", function (state) {
-		let index = connectedPrinters.findIndex(x => x.id == ThisnodeId);
+		let index = connectedPrinters.findIndex(x => x.id == thisNodeId);
 		connectedPrinters[index].state = state
 	})
 	socket.on("readyToPrint", function () {
-		let printer = connectedPrinters.find(x => x.id == ThisnodeId);
+		let printer = connectedPrinters.find(x => x.id == thisNodeId);
 		socket.emit("startPrintJob", printer.messageTemplate);
 	})
+	socket.on("PrintError", function (errorText) {
+		let node = connectedPrinters.findIndex(x => x.id == thisNodeId)
+		node.state = "Error";
+		const message = { "class": "error", "tag": "Error", "text": `Printer "${connectedPrinters[node].name}" has enetred Error state\n ${errorText}` }
+		sendLog(message)
+
+	});
 	socket.on("disconnect", function () {
-		let node = connectedPrinters.findIndex(x => x.id == ThisnodeId)
+		let node = connectedPrinters.findIndex(x => x.id == thisNodeId)
 		const message = { "class": "caution", "tag": "Caution", "text": `Printer "${connectedPrinters[node].name}" has disconnected` }
 		sendLog(message)
 		connectedPrinters.splice(node, 1)
@@ -176,8 +185,8 @@ function sendFile(filename, messagetemplate, socket) {
 }
 
 Array.prototype.inArray = function (comparer) {
-	for (var i = 0; i < this.length; i++) {
-		if (comparer(this[i])) return true;
+	for (const elem of this) {
+		if (comparer(elem)) return true;
 	}
 	return false;
 };

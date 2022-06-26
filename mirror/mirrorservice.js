@@ -11,7 +11,7 @@ class PrinterWorker {
 	isDataReceived = false;
 	commandEnquedCount = 0;
 	static comPort = null;
-	baudrates = [115200, 250000, 230400, 57600, 38400, 19200, 9600]
+	baudrates = [250000, 115200, 230400, 57600, 38400, 19200, 9600]
 	baudratesUsedIndex = 0;
 	prepared = false;
 	port = null;
@@ -20,7 +20,7 @@ class PrinterWorker {
 	static appId = null;
 	static socket = null;
 	static stream = null;
-	state = "Idle";
+	static state = "Idle";
 	fileSize = 0;
 	downloadFailCount = 0;
 
@@ -104,34 +104,35 @@ class PrinterWorker {
 		}
 	}
 	getState() {
-		PrinterWorker.socket.emit("State", this.state);
+		PrinterWorker.socket.emit("State", PrinterWorker.state);
 	}
 
 	kill() {
 		this.connect("M112");
-		this.setState("Error");
+		PrinterWorker.setState("Error");
 	}
 
-	setState(newState) {
-		this.state = newState;
-		PrinterWorker.socket.emit("stateChange", this.state);
+	static setState(newState) {
+		PrinterWorker.state = newState;
+		PrinterWorker.socket.emit("stateChange", PrinterWorker.state);
 	}
 
 	pairRequest() {
 		if (PrinterWorker.apiKey == null) {
-			const token = uuidv4();
-			PrinterWorker.apiKey = bcrypt.hashSync(token, 10);
-			const data = fs.readFileSync('config.json')
-			let parsedConfig = JSON.parse(data);
-			parsedConfig.apiKey = PrinterWorker.apiKey;
-			fs.writeFileSync("config.json", JSON.stringify(parsedConfig));
-			PrinterWorker.socket.emit("pairResponse", { "id": PrinterWorker.appId, "secret": token })
-			PrinterWorker.socket.emit("nodeId", PrinterWorker.appId);
+			PrinterWorker.socket.emit("pairResponse", { "id": PrinterWorker.appId })
+			PrinterWorker.socket.once("pairResponse",(data)=>{	
+				PrinterWorker.apiKey = data.encryptedKey;	
+				const JSONdata = fs.readFileSync('config.json')
+				let parsedConfig = JSON.parse(JSONdata);
+				parsedConfig.apiKey = PrinterWorker.apiKey;
+				fs.writeFileSync("config.json", JSON.stringify(parsedConfig));
+				PrinterWorker.socket.emit("nodeId", PrinterWorker.appId);
+			})
 
 		}
 	}
 	setComPort(comPort) {
-		if (this.state == "Idle") {
+		if (PrinterWorker.state == "Idle") {
 			console.log("[CFG] >> COM port set to :" + comPort);
 			PrinterWorker.comPort = comPort;
 			const data = fs.readFileSync('config.json');
@@ -142,7 +143,7 @@ class PrinterWorker {
 
 	}
 	connect(SingleCommand) {
-		if (this.state == "Idle" && (this.port == null || !this.port.isOpen)) {
+		if (PrinterWorker.state == "Idle" && (this.port == null || !this.port.isOpen)) {
 			this.port = new SerialPort(PrinterWorker.comPort, { baudRate: this.baudrates[this.baudratesUsedIndex] });
 			this.parser = this.port.pipe(new Readline({ delimiter: '\n' }));// Read the port data
 
@@ -157,8 +158,8 @@ class PrinterWorker {
 							this.parser._flush((x) => { });
 							setTimeout(() => {
 								this.port.close();
-								setTimeout(() => { this.port.open(); }, 200);
-							}, 200);
+								setTimeout(() => { this.port.open(); }, 5000);
+							}, 5000);
 						}
 					} else {
 						console.log('[Serial] Opened');
@@ -177,9 +178,9 @@ class PrinterWorker {
 			});
 
 			this.port.on('error', function (err) {
-				PrinterWorker.socket.emit("error", "[Error] || " + err.message);
+				PrinterWorker.socket.emit("PrintError", "[Error] || " + err.message);
 				console.log('Error: ', err.message)
-				this.setState("Error");
+				PrinterWorker.setState("Error");
 			});
 
 			this.parser.on('data', data => {
@@ -189,8 +190,8 @@ class PrinterWorker {
 				}
 				PrinterWorker.socket.emit("printerlog", "[Data] >> " + data);
 				console.log('[Data] >>', data);
-				if(data.includes("Error:")){
-					this.setState("Error");
+				if (data.includes("Error:")) {
+					PrinterWorker.setState("Error");
 				}
 			});
 		} else {
@@ -214,15 +215,15 @@ class PrinterWorker {
 	portList() {
 		SerialPort.list().then(
 			(ports) => {
-				PrinterWorker.socket.emit("ports", JSON.stringify(ports));
+				PrinterWorker.socket.emit("ports", { "selected": PrinterWorker.comPort, "ports": ports });
 				console.log(JSON.stringify(ports));
 			}
 		)
 	}
 
 	fileTransfer(data, fileSize) {
-		if (this.state == "Idle") {
-			this.setState("Downloading");
+		if (PrinterWorker.state == "Idle") {
+			PrinterWorker.setState("Downloading");
 			console.log('[Stream] >> Incomming File Transfer');
 			PrinterWorker.stream = socketStream.createStream();
 			this.fileSize = 0;
@@ -233,7 +234,7 @@ class PrinterWorker {
 					console.log('[Stream] >> File Transfer Complated');
 					PrinterWorker.socket.emit("readyToPrint");
 					this.isTranserComplated = true;
-					this.setState("Idle");
+					PrinterWorker.setState("Idle");
 				}
 			})
 			socketStream(PrinterWorker.socket).emit(data, PrinterWorker.stream)
@@ -243,26 +244,26 @@ class PrinterWorker {
 	}
 
 	startPrintJob() {
-		if (this.state == "Idle") {
+		if (PrinterWorker.state == "Idle") {
 			this.connect();
 		}
 	}
 
 	async startTrueJob() {
-		this.setState("Printing");
+		PrinterWorker.setState("Printing");
 		this.serialWrite("M155 S5");
 		const liner = new lineByLine('printJob.gco');
 		let line;
-		while ((line = liner.next()) && this.state != "Error") {
+		while ((line = liner.next()) && PrinterWorker.state != "Error") {
 			while (this.commandEnquedCount >= 5) { await sleep(100) }
 			this.serialWrite(line.toString('ascii'));
 		}
 		while (this.commandEnquedCount == 0) { await sleep(100) }
-		this.setState("Idle");
+		PrinterWorker.setState("Idle");
 	}
 
 	portState() {
-		PrinterWorker.socket.emit("state", this.state);
+		PrinterWorker.socket.emit("state", PrinterWorker.state);
 	}
 
 	PermissionProxy(apiKey, callback) {
@@ -273,11 +274,11 @@ class PrinterWorker {
 		}
 	}
 	DownlaodHyperVisor(prevSize, data, fileSize) {
-		if (this.state == "Downloading" && this.downloadFailCount <= 3) {
+		if (PrinterWorker.state == "Downloading" && this.downloadFailCount <= 3) {
 			let newSize = this.fileSize;
 			if (prevSize == newSize) {
 				console.log("[Stream] >> File has been corrupted. Retrying.");
-				this.setState("Idle");
+				PrinterWorker.setState("Idle");
 				this.downloadFailCount++;
 				setTimeout(() => { this.fileTransfer(data, fileSize) }, 5000);
 			} else {

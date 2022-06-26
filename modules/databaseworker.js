@@ -6,12 +6,12 @@ class DatabaseWorker{
     }
     getSecretById(printerId){
         const row = this.db.prepare('SELECT SecretKey FROM Nodes WHERE Id = ?').get(printerId);
-        if(row) return row.SecretKey;
+        if(!!row) return row.SecretKey;
         else return 0;
     }
     getPrinterNameById(printerId){
         const row = this.db.prepare('SELECT Name FROM Nodes WHERE Id = ?').get(printerId);
-        if(row) return row.Name;
+        if(!!row) return row.Name;
         else return 0;
     }
     setPrinterNameById(newname,printerId){
